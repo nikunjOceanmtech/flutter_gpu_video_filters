@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gpu_filters_interface/flutter_gpu_filters_interface.dart';
 import 'package:flutter_gpu_video_filters/flutter_gpu_video_filters.dart';
+import 'package:gal/gal.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -37,8 +38,7 @@ class _FilterPageState extends State<FilterPage> {
   }
 
   Future<void> _prepareImageFilter() async {
-    GPUOverlayConfiguration configuration = GPUOverlayConfiguration()
-      ..image2File = File('/data/data/com.example.example/cache/effect3.png');
+    GPUOverlayConfiguration configuration = GPUOverlayConfiguration()..image2Asset = 'images/effect2.png';
     await configuration.prepare();
     await GPUVideoPreviewParams.create(configuration);
     previewParamsReady = true;
@@ -86,6 +86,7 @@ class _FilterPageState extends State<FilterPage> {
     debugPrint('_exportVideo: Exporting file took ${watch.elapsed.inSeconds} Seconds');
     await GallerySaver.saveVideo(output.absolute.path);
     debugPrint('_exportVideo: Exported: ${output.absolute}');
+    await Gal.putVideo(output.path);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(backgroundColor: Colors.green.shade700, content: Text("Video Save Success${output.path}")),
     );
