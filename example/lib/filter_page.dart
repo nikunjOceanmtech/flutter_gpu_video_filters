@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:example/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gpu_filters_interface/flutter_gpu_filters_interface.dart';
 import 'package:flutter_gpu_video_filters/flutter_gpu_video_filters.dart';
@@ -38,8 +39,9 @@ class _FilterPageState extends State<FilterPage> {
   }
 
   Future<void> _prepareImageFilter() async {
-    GPUOverlayConfiguration configuration = GPUOverlayConfiguration()..image2Asset = 'images/effect2.png';
+    GPUOverlayConfiguration configuration = GPUOverlayConfiguration()..image2Asset = 'images/effect3.png';
     await configuration.prepare();
+    print("======+${configuration.parameters}");
     await GPUVideoPreviewParams.create(configuration);
     previewParamsReady = true;
     _exportVideo(config: configuration, context: context).catchError(
@@ -50,14 +52,14 @@ class _FilterPageState extends State<FilterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Preview')),
+      appBar: AppBar(title: Text('${widget.filterType.name} Preview'.toCamelcase())),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (widget.filterType == FilterType.color) {
-              _prepareColorFilter().whenComplete(() => setState(() {}));
+              await _prepareColorFilter().whenComplete(() => setState(() {}));
             } else if (widget.filterType == FilterType.image) {
-              _prepareImageFilter().whenComplete(() => setState(() {}));
+              await _prepareImageFilter().whenComplete(() => setState(() {}));
             }
           },
           child: Text("Apply Filter"),
