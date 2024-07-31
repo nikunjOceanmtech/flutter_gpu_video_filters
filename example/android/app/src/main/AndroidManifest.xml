@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.example">
+    package="com.video.filter.gpu">
    <application
-        android:label="example"
+        android:label="Flutter GPU Filters"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

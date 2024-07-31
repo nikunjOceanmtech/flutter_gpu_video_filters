@@ -36,18 +36,11 @@ class ListPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const FilterPage(filterType: FilterType.color);
-                      },
-                    ),
+                    MaterialPageRoute(builder: (context) => const FilterPage(filterType: FilterType.color)),
                   );
                 },
                 title: const Text('Color Filter'),
-                trailing: Icon(
-                  Icons.arrow_forward,
-                  color: Theme.of(context).primaryColor,
-                ),
+                trailing: Icon(Icons.arrow_forward, color: Colors.red),
               ),
             ),
             Card(
@@ -55,18 +48,11 @@ class ListPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const FilterPage(filterType: FilterType.image);
-                      },
-                    ),
+                    MaterialPageRoute(builder: (context) => const FilterPage(filterType: FilterType.image)),
                   );
                 },
                 title: const Text('Image Filter'),
-                trailing: Icon(
-                  Icons.arrow_forward,
-                  color: Theme.of(context).primaryColor,
-                ),
+                trailing: Icon(Icons.arrow_forward, color: Colors.red),
               ),
             ),
           ],
