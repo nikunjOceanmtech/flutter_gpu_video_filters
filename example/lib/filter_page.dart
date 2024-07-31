@@ -32,7 +32,6 @@ class _FilterPageState extends State<FilterPage> {
     await configuration.prepare();
     await GPUVideoPreviewParams.create(configuration);
     previewParamsReady = true;
-    print("_exportVideo=============");
     _exportVideo(config: configuration, context: context, file: file).catchError(
       (e) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()))),
     );
@@ -41,7 +40,6 @@ class _FilterPageState extends State<FilterPage> {
   Future<void> _prepareImageFilter({required File file}) async {
     GPUOverlayConfiguration configuration = GPUOverlayConfiguration()..image2Asset = 'images/effect3.png';
     await configuration.prepare();
-    print("======+${configuration.parameters}");
     await GPUVideoPreviewParams.create(configuration);
     previewParamsReady = true;
     _exportVideo(config: configuration, context: context, file: file).catchError(
@@ -61,6 +59,11 @@ class _FilterPageState extends State<FilterPage> {
           children: [
             ElevatedButton(
               onPressed: () async {
+                if (1 == 1) {
+                  await _prepareImageFilter(file: File('')).whenComplete(() => setState(() {}));
+                  return;
+                }
+
                 ImagePicker picker = ImagePicker();
                 XFile? xfile = await picker.pickVideo(source: ImageSource.gallery);
                 if (xfile != null) {
@@ -81,10 +84,7 @@ class _FilterPageState extends State<FilterPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
-                      Text(
-                        process1,
-                        textAlign: TextAlign.center,
-                      ),
+                      Text(process1, textAlign: TextAlign.center),
                     ],
                   )
                 : const SizedBox.shrink()
@@ -104,7 +104,8 @@ class _FilterPageState extends State<FilterPage> {
     watch.start();
     final processStream = config.exportVideoFile(
       VideoExportConfig(
-        FileInputSource(file),
+        // FileInputSource(file),
+        AssetInputSource(asset),
         output,
       ),
     );
