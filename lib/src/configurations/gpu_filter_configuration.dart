@@ -1,7 +1,6 @@
 part of '../../flutter_gpu_video_filters.dart';
 
-abstract class GPUFilterConfiguration extends FilterConfiguration
-    with VideoFilterConfiguration {
+abstract class GPUFilterConfiguration extends FilterConfiguration with VideoFilterConfiguration {
   final FilterApi _api;
   final AssetBundle _assetBundle;
   final String _vertexShadersPath;
@@ -38,6 +37,8 @@ abstract class GPUFilterConfiguration extends FilterConfiguration
         '$_fragmentShadersPath/$name.glsl',
       );
 
+      print('=================$_exportVertex');
+
       final floats = parameters
           .whereNot((e) => e.compute)
           .whereType<NumberParameter>()
@@ -58,8 +59,7 @@ abstract class GPUFilterConfiguration extends FilterConfiguration
           .whereType<VectorParameter>()
           .groupFoldBy((e) => e.name, (_, e) => e.floats64);
 
-      final textures =
-          parameters.whereType<GLBitmapParameter>().singleOrNull?.name;
+      final textures = parameters.whereType<GLBitmapParameter>().singleOrNull?.name;
 
       final filterId = await _api.create(
         vertexShader,
@@ -98,9 +98,7 @@ abstract class GPUFilterConfiguration extends FilterConfiguration
     final output = config.output;
     var format = config.format;
     if (format == VideoExportFormat.auto) {
-      format = output.path.endsWith('.mp4')
-          ? VideoExportFormat.mp4
-          : VideoExportFormat.mov;
+      format = output.path.endsWith('.mp4') ? VideoExportFormat.mp4 : VideoExportFormat.mov;
     }
     final bool asset = source is AssetInputSource;
     final sessionId = await _api.exportVideoFile(
@@ -112,9 +110,7 @@ abstract class GPUFilterConfiguration extends FilterConfiguration
       period.inMilliseconds,
     );
 
-    final stream = EventChannel('Transformer_$sessionId')
-        .receiveBroadcastStream()
-        .distinct();
+    final stream = EventChannel('Transformer_$sessionId').receiveBroadcastStream().distinct();
     await for (num event in stream) {
       yield event.toDouble() / 100.0;
     }
@@ -135,10 +131,8 @@ class BunchFilterConfiguration extends GPUFilterConfiguration {
           fragmentShadersPath: fragmentShaders,
         );
 
-  T configuration<T extends GPUFilterConfiguration>({required int at}) =>
-      _configurations[at] as T;
+  T configuration<T extends GPUFilterConfiguration>({required int at}) => _configurations[at] as T;
 
   @override
-  List<ConfigurationParameter> get parameters =>
-      _configurations.map((e) => e.parameters).expand((e) => e).toList();
+  List<ConfigurationParameter> get parameters => _configurations.map((e) => e.parameters).expand((e) => e).toList();
 }
